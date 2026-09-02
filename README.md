@@ -1,9 +1,3 @@
-# SampleMongoDB
-
-![SampleMongoDB](https://github.com/atishagarwaal/SampleMongoDB/assets/111984856/25ec6190-a94e-48da-b939-ee04605e81d0)
-
-Application to upload and download files from MongoDB using C# (.NET).
-
 ## Overview
 
 This sample project demonstrates how to store and retrieve files in MongoDB from a C# application. It includes examples for uploading files to MongoDB (GridFS) and downloading them back to the local filesystem.
@@ -127,15 +121,3 @@ Refer to the sample code in the repository to find exact method names and comman
 
 - If the project uses GridFS, files are stored in chunks; ensure your MongoDB deployment supports GridFS.
 - For production, secure your MongoDB credentials and use TLS/SSL (especially with Atlas). Use role-based access control and network restrictions.
-
-## Contributing
-
-Contributions are welcome. Open an issue or submit a pull request with improvements or fixes.
-
-## License
-
-Add a license file to the repository (for example, MIT) or update this section with the chosen license.
-
-## Author
-
-atishagarwaal
