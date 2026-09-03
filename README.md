@@ -1,22 +1,26 @@
-## Overview
+# SampleMongoDB
 
-This sample project demonstrates how to store and retrieve files in MongoDB from a C# application. It includes examples for uploading files to MongoDB (GridFS) and downloading them back to the local filesystem.
+## 1. Overview
 
-## Features
+SampleMongoDB is a minimal C#/.NET sample that demonstrates storing and retrieving files in MongoDB (GridFS). It includes examples and code showing how to upload files into MongoDB and download them back to the local filesystem.
 
-- Upload files to MongoDB
-- Download files from MongoDB
-- Example C#/.NET project showing the usage
+## 2. Description
 
-## Prerequisites
+This repository contains a .NET application that uses the official MongoDB.Driver and GridFS APIs to:
 
-- .NET SDK (6.0 or later recommended)
-- MongoDB server (local or MongoDB Atlas)
-- A MongoDB connection string with appropriate credentials
+- Upload files to a MongoDB GridFS bucket
+- Download files from GridFS by id or filename
+- Demonstrate both synchronous and asynchronous usage patterns
 
-## Configuration
+The sample is intended for learning and prototyping. For production use, secure credentials and follow MongoDB best practices.
 
-Update the MongoDB connection string and database name in the application's configuration (for example, appsettings.json):
+## 3. Pre-requisites
+
+- .NET SDK 10.0 (or the SDK matching the TFM used in the project)
+- A running MongoDB instance (local, Docker, or MongoDB Atlas)
+- A MongoDB connection string with a database and permissions for GridFS operations
+
+Configuration options (example appsettings.json):
 
 ```json
 {
@@ -27,97 +31,30 @@ Update the MongoDB connection string and database name in the application's conf
 }
 ```
 
-If the project uses environment variables, set the appropriate variable instead of appsettings.json.
+You can also provide the connection string and database via environment variables if preferred.
 
-## C# examples
+## 4. Build and Run
 
-Below are minimal C# examples showing how to upload and download files using MongoDB GridFS via the official MongoDB.Driver package.
+From the repository root:
 
-Example: Upload and download using GridFS (async)
+1. Restore and build
 
-```csharp
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using MongoDB.Driver.GridFS;
+    ```bash
+    dotnet build
+    ```
 
-public class GridFsExample
-{
-    public static async Task RunAsync()
-    {
-        var connectionString = "mongodb://localhost:27017"; // replace with your connection string
-        var client = new MongoClient(connectionString);
-        var database = client.GetDatabase("sample_files_db");
-        var bucket = new GridFSBucket(database);
+2. Run the project
 
-        // Upload a file
-        using (var sourceStream = File.OpenRead("path/to/local/file.jpg"))
-        {
-            ObjectId id = await bucket.UploadFromStreamAsync("file.jpg", sourceStream);
-            Console.WriteLine($"Uploaded file id: {id}");
-        }
+    ```bash
+    dotnet run --project ./SampleMongoDB
+    ```
 
-        // Download the file by id
-        // Replace with the actual ObjectId returned above
-        var fileId = new ObjectId("614c1b8f1a4e4b6f9a0b1234");
-        using (var destination = File.Create("downloads/file.jpg"))
-        {
-            await bucket.DownloadToStreamAsync(fileId, destination);
-            Console.WriteLine("Downloaded file to downloads/file.jpg");
-        }
-    }
-}
-```
+Replace the project path with the actual project folder if different. If the solution contains multiple projects, specify the desired project path.
 
-Synchronous example (simplified):
+Notes:
 
-```csharp
-using System.IO;
-using MongoDB.Driver;
-using MongoDB.Driver.GridFS;
+- Ensure the MongoDB instance referenced in the configuration is running and accessible.
+- For development with Docker, you can run a local MongoDB instance with: `docker run --name mongo -p 27017:27017 -d mongo:latest`
+- For production, enable TLS/SSL and use credentials with least privilege.
 
-var client = new MongoClient("mongodb://localhost:27017");
-var db = client.GetDatabase("sample_files_db");
-var bucket = new GridFSBucket(db);
-
-// Upload
-using (var s = File.OpenRead("path/to/file.txt"))
-{
-    var id = bucket.UploadFromStream("file.txt", s);
-    Console.WriteLine($"Uploaded id: {id}");
-}
-
-// Download
-using (var outStream = File.Create("out/file.txt"))
-{
-    bucket.DownloadToStreamByName("file.txt", outStream);
-}
-```
-
-Adjust paths and identifiers to match your application and storage strategy.
-
-## Build and run
-
-From the repository root, build and run the project:
-
-```bash
-dotnet build
-dotnet run --project ./<YourProjectFolder>
-```
-
-Replace `<YourProjectFolder>` with the path to the C# project in this repo (for example: `src/SampleMongoDB`).
-
-## Usage
-
-- Upload a file: run the upload command or use the provided UI (if present) and provide the path to the file. The app will store the file in MongoDB and return an identifier (ObjectId or filename).
-
-- Download a file: run the download command or use the UI and provide the stored identifier. The application will retrieve the file and save it locally.
-
-Refer to the sample code in the repository to find exact method names and command-line options.
-
-## Notes
-
-- If the project uses GridFS, files are stored in chunks; ensure your MongoDB deployment supports GridFS.
-- For production, secure your MongoDB credentials and use TLS/SSL (especially with Atlas). Use role-based access control and network restrictions.
+For code examples and usage details, see the sample classes in the repository.

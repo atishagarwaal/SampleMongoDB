@@ -14,6 +14,7 @@ namespace SampleMongoDB
 
         static void Main(string[] args)
         {
+            // Create a MongoDB client and get the database and collection
             var client = new MongoClient(connectionString);
             var database = client.GetDatabase(databaseName);
             var collection = database.GetCollection<FileDocument>(collectionName);
